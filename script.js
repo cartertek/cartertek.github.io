@@ -13,7 +13,14 @@ const closeDropdowns = (except) => {
 };
 
 dropdownItems.forEach((item) => {
+  const firstDropdownLink = item.querySelector(".dropdown a[href]");
+  const topLevelLink = item.querySelector(":scope > a.dropdown-link");
   const toggle = item.querySelector(".dropdown-toggle");
+
+  if (firstDropdownLink && topLevelLink) {
+    topLevelLink.href = firstDropdownLink.href;
+  }
+
   if (!toggle) return;
 
   toggle.addEventListener("click", () => {

@@ -52,7 +52,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid #5c83ff; outline-offs
 }
 .nav-wrap { height: 88px; display: flex; align-items: center; justify-content: space-between; transition: height .25s ease; }
 .site-header.is-scrolled .nav-wrap { height: 58px; }
-.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 850; font-size: 20px; text-decoration: none; letter-spacing: -.04em; }
+.brand { display: inline-flex; align-items: center; gap: 12px; font-family: "Trebuchet MS", "Avenir Next", "Segoe UI", Arial, sans-serif; font-weight: 850; font-size: 20px; text-decoration: none; letter-spacing: 0; }
 .brand small { font-size: 10px; letter-spacing: .1em; vertical-align: top; }
 .brand-mark {
   width: 44px; height: 44px; object-fit: cover; display: block;
@@ -64,13 +64,18 @@ a:focus-visible, button:focus-visible { outline: 3px solid #5c83ff; outline-offs
 .site-nav a { font-size: 14px; font-weight: 700; text-decoration: none; }
 .site-nav a:not(.button):hover, .site-nav a:not(.button):focus-visible, .dropdown-toggle:hover, .dropdown-toggle:focus-visible { color: #9ab3ff; }
 .nav-item { position: relative; display: flex; align-items: center; gap: 5px; }
-.nav-item > a[aria-current="page"], .dropdown-toggle[aria-current="page"] { color: #9ab3ff; }
+.nav-item > a[aria-current="page"] { color: #9ab3ff; }
 .dropdown-toggle {
-  display: grid; place-items: center; padding: 0; border: 0;
+  display: grid; place-items: center; width: 20px; height: 20px; padding: 0; border: 0;
   color: inherit; background: transparent; cursor: pointer;
-  font: inherit; font-size: 14px; font-weight: 700;
+  font: inherit;
 }
-.dropdown-label { white-space: nowrap; }
+.dropdown-toggle::before {
+  content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); transition: transform .18s ease;
+}
+.has-dropdown.dropdown-open .dropdown-toggle::before { transform: translateY(1px) rotate(225deg); }
+.dropdown-link { white-space: nowrap; }
 .dropdown {
   position: absolute; top: calc(100% + 20px); left: -18px; width: max-content; min-width: 180px;
   display: grid; visibility: hidden; opacity: 0; transform: translateY(-6px);
@@ -84,7 +89,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid #5c83ff; outline-offs
   visibility: visible; opacity: 1; transform: translateY(0);
 }
 .secondary-nav { transition: max-height .25s ease, opacity .2s ease; }
-.secondary-nav .shell { min-height: 39px; display: flex; align-items: center; justify-content: flex-end; gap: 27px; }
+.secondary-nav .shell { min-height: 39px; display: flex; align-items: center; justify-content: flex-start; gap: 27px; }
 .secondary-nav a { color: rgba(255,255,255,.72); font-size: 12px; font-weight: 700; text-decoration: none; }
 .secondary-nav a:hover, .secondary-nav a:focus-visible { color: #a5d5b5; }
 .site-header.is-scrolled .secondary-nav { max-height: 29px; opacity: 1; }
@@ -287,25 +292,25 @@ h2 { margin: 0; font-size: clamp(42px, 5vw, 70px); line-height: .98; letter-spac
 .construction-index { position: absolute; top: 32px; right: 34px; color: var(--muted); font: 700 11px/1 "Courier New", monospace; text-transform: uppercase; letter-spacing: .1em; }
 .construction-card h2 { max-width: 850px; }
 .construction-card > p:last-child { margin: 28px 0 0; color: var(--muted); font-size: 18px; }
-.quote-main { padding-top: 88px; color: var(--ink); background: #eef2ec; }
+.quote-main { padding-top: 88px; color: var(--paper); background: var(--ink); }
 .quote-section {
   min-height: calc(100vh - 88px);
-  background-color: #eef2ec;
-  background-image: linear-gradient(rgba(0,81,28,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,81,28,.08) 1px, transparent 1px);
-  background-size: 34px 34px;
+  background-color: var(--ink);
+  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 .quote-grid { display: grid; grid-template-columns: .72fr 1.28fr; gap: 7%; align-items: start; }
 .quote-grid > * { min-width: 0; }
 .quote-copy { position: sticky; top: 105px; max-width: 100%; }
 .quote-copy h1 { font-size: clamp(48px, 5.5vw, 78px); }
-.quote-copy .eyebrow { color: var(--green); }
-.quote-copy > p:not(.eyebrow) { margin: 28px 0 36px; color: #4f535b; font-size: 18px; }
-.quote-copy .contact-link { border-bottom-color: rgba(24,23,21,.22); }
-.quote-copy .contact-link:first-child { border-top-color: rgba(24,23,21,.22); }
-.quote-copy .contact-link span, .quote-copy .contact-link i { color: var(--cobalt); }
+.quote-copy .eyebrow { color: #8cabff; }
+.quote-copy > p:not(.eyebrow) { margin: 28px 0 36px; color: rgba(255,255,255,.7); font-size: 18px; }
+.quote-copy .contact-link { border-bottom-color: rgba(255,255,255,.3); }
+.quote-copy .contact-link:first-child { border-top-color: rgba(255,255,255,.3); }
+.quote-copy .contact-link span, .quote-copy .contact-link i { color: #8cabff; }
 .quote-copy .contact-link:hover strong { color: var(--cobalt); }
-.quote-copy .consultant { color: #4f535b; }
-.quote-copy .consultant strong { color: var(--ink); }
+.quote-copy .consultant { color: rgba(255,255,255,.65); }
+.quote-copy .consultant strong { color: var(--paper); }
 .booking-card {
   min-height: 720px; padding: 18px; color: var(--ink); background: rgba(255,255,255,.86);
   width: 100%; max-width: 100%; overflow: hidden;
@@ -345,8 +350,8 @@ h2 { margin: 0; font-size: clamp(42px, 5vw, 70px); line-height: .98; letter-spac
   .site-nav { position: absolute; inset: 0; min-height: 100vh; display: none; align-content: start; align-items: stretch; gap: 0; padding: 100px 24px 34px; background: var(--ink); border-bottom: 1px solid rgba(255,255,255,.2); overflow-y: auto; }
   .site-nav.open { display: grid; }
   .nav-item { display: grid; grid-template-columns: 1fr auto; border-top: 1px solid rgba(255,255,255,.18); }
-  .nav-item > a, .dropdown-toggle { padding: 18px 0; font-size: 18px; }
-  .dropdown-toggle { width: 100%; height: 58px; justify-content: start; color: inherit; text-align: left; }
+  .nav-item > a { padding: 18px 0; font-size: 18px; }
+  .dropdown-toggle { width: 44px; height: 58px; color: inherit; }
   .dropdown { position: static; grid-column: 1 / -1; width: 100%; max-height: 0; min-width: 0; overflow: hidden; padding: 0 0 0 16px; visibility: visible; opacity: 1; transform: none; color: var(--paper); background: transparent; border: 0; box-shadow: none; transition: max-height .22s ease, padding .22s ease; }
   .dropdown a { padding: 11px 0; color: rgba(255,255,255,.72); visibility: hidden; }
   .has-dropdown.dropdown-open .dropdown { max-height: 250px; padding-bottom: 15px; }
@@ -389,8 +394,8 @@ h2 { margin: 0; font-size: clamp(42px, 5vw, 70px); line-height: .98; letter-spac
   .brand-mark { width: 38px; height: 38px; }
   .hero { padding-top: 127px; }
   .hero-grid { min-height: auto; gap: 60px; padding-block: 76px 56px; }
-  .hero h1 { font-size: clamp(45px, 14.5vw, 64px); }
-  .hero-lede { font-size: 17px; }
+  .hero h1 { font-size: clamp(40px, 12vw, 52px); letter-spacing: -.055em; }
+  .hero-lede { max-width: 32ch; font-size: 17px; }
   .hero-actions { align-items: flex-start; flex-direction: column; gap: 25px; }
   .hero-panel { min-height: 440px; padding: 28px; clip-path: polygon(0 0, 78% 0, 100% 16%, 100% 100%, 0 100%); }
   .code-field { top: 38px; left: 28px; font-size: 8px; }
