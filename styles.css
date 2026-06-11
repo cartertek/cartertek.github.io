@@ -60,6 +60,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid #5c83ff; outline-offs
   border-radius: 50%;
   transition: width .25s ease, height .25s ease;
 }
+.site-header .brand-mark { aspect-ratio: 1; clip-path: circle(50%); }
 .site-header.is-scrolled .brand-mark { width: 36px; height: 36px; }
 .site-nav { display: flex; align-items: center; gap: 34px; }
 .site-nav a { font-size: 14px; font-weight: 700; text-decoration: none; }
