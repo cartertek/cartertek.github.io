@@ -129,7 +129,22 @@ const getNormalizedPath = (pathname, hash = "") => {
   return pageViews[path] ? path : "/";
 };
 
+const getRedirectRoute = () => {
+  const route = new URLSearchParams(window.location.search).get("route");
+  if (!route || !route.startsWith("/")) return null;
+
+  try {
+    const url = new URL(route, window.location.origin);
+    if (url.origin !== window.location.origin) return null;
+    return getNormalizedPath(url.pathname, url.hash);
+  } catch {
+    return null;
+  }
+};
+
 const getRoute = () => {
+  const redirectRoute = getRedirectRoute();
+  if (redirectRoute) return redirectRoute;
   return getNormalizedPath(window.location.pathname, window.location.hash);
 };
 
@@ -230,6 +245,12 @@ const initHeader = () => {
     link.addEventListener("click", closeNav);
   });
 
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".has-dropdown")) {
+      closeDropdowns();
+    }
+  });
+
   navToggle?.addEventListener("click", () => {
     const isOpen = navToggle.getAttribute("aria-expanded") === "true";
     navToggle.setAttribute("aria-expanded", String(!isOpen));
@@ -327,8 +348,10 @@ const renderRoute = ({ shouldResetScroll = true } = {}) => {
 
   if (!main) return;
 
+  closeNav();
+
   const normalizedUrl = route;
-  const currentUrl = `${window.location.pathname}${window.location.hash}`;
+  const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   if (normalizedUrl !== currentUrl) {
     history.replaceState({}, "", normalizedUrl);
   }
