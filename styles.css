@@ -79,12 +79,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid #5c83ff; outline-offs
 .has-dropdown.dropdown-open .dropdown-toggle::before { transform: translateY(1px) rotate(225deg); }
 .dropdown-link { white-space: nowrap; }
 .dropdown {
-  position: absolute; top: calc(100% + 20px); left: -18px; width: max-content; min-width: 180px;
+  position: absolute; top: 100%; left: -18px; width: max-content; min-width: 180px;
   display: grid; visibility: hidden; opacity: 0; transform: translateY(-6px);
   padding: 9px; color: var(--ink); background: var(--paper); border: 1px solid var(--ink);
   box-shadow: 6px 6px 0 var(--cobalt); transition: opacity .18s ease, transform .18s ease, visibility .18s;
 }
-.site-header.is-scrolled .dropdown { top: calc(100% + 14px); }
+.site-header.is-scrolled .dropdown { top: 100%; }
 .dropdown a { padding: 10px 12px; }
 .dropdown a:hover, .dropdown a:focus-visible { color: var(--navy) !important; background: #e8eee9; }
 .has-dropdown.dropdown-open .dropdown {
