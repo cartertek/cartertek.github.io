@@ -87,7 +87,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid #5c83ff; outline-offs
 .site-header.is-scrolled .dropdown { top: calc(100% + 14px); }
 .dropdown a { padding: 10px 12px; }
 .dropdown a:hover, .dropdown a:focus-visible { color: var(--navy) !important; background: #e8eee9; }
-.has-dropdown:hover .dropdown, .has-dropdown:focus-within .dropdown, .has-dropdown.dropdown-open .dropdown {
+.has-dropdown.dropdown-open .dropdown {
   visibility: visible; opacity: 1; transform: translateY(0);
 }
 .secondary-nav { transition: max-height .25s ease, opacity .2s ease; }

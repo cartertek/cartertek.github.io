@@ -176,7 +176,23 @@ const closeDropdown = (item) => {
   item.querySelector(".dropdown-toggle")?.setAttribute("aria-expanded", "false");
 };
 
-const closeNav = () => {
+let suppressDropdownAutoOpenUntil = 0;
+
+const suppressDropdownAutoOpen = () => {
+  suppressDropdownAutoOpenUntil = Date.now() + 400;
+};
+
+const canAutoOpenDropdown = () => Date.now() > suppressDropdownAutoOpenUntil;
+
+const openDropdown = (item) => {
+  const toggle = item.querySelector(".dropdown-toggle");
+  closeDropdowns(item);
+  item.classList.add("dropdown-open");
+  toggle?.setAttribute("aria-expanded", "true");
+};
+
+const closeNav = ({ suppressAutoOpen = false } = {}) => {
+  if (suppressAutoOpen) suppressDropdownAutoOpen();
   const navToggle = document.querySelector(".nav-toggle");
   const siteNav = document.querySelector(".site-nav");
   navToggle?.setAttribute("aria-expanded", "false");
@@ -221,18 +237,37 @@ const initHeader = () => {
   const navToggle = document.querySelector(".nav-toggle");
   const siteNav = document.querySelector(".site-nav");
   const siteHeader = document.querySelector(".site-header");
+  let isKeyboardNavigation = false;
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Tab") isKeyboardNavigation = true;
+  });
+
+  document.addEventListener("pointerdown", () => {
+    isKeyboardNavigation = false;
+  });
 
   document.querySelectorAll(".has-dropdown").forEach((item) => {
     const toggle = item.querySelector(".dropdown-toggle");
 
     toggle?.addEventListener("click", () => {
       const willOpen = !item.classList.contains("dropdown-open");
-      closeDropdowns(item);
-      item.classList.toggle("dropdown-open", willOpen);
-      toggle.setAttribute("aria-expanded", String(willOpen));
+      if (willOpen) {
+        openDropdown(item);
+      } else {
+        closeDropdown(item);
+      }
+    });
+
+    item.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse" && canAutoOpenDropdown()) openDropdown(item);
     });
 
     item.addEventListener("mouseleave", () => closeDropdown(item));
+
+    item.addEventListener("focusin", () => {
+      if (isKeyboardNavigation && canAutoOpenDropdown()) openDropdown(item);
+    });
 
     item.addEventListener("focusout", (event) => {
       if (!item.contains(event.relatedTarget)) {
@@ -348,7 +383,7 @@ const renderRoute = ({ shouldResetScroll = true } = {}) => {
 
   if (!main) return;
 
-  closeNav();
+  closeNav({ suppressAutoOpen: true });
 
   const normalizedUrl = route;
   const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
@@ -383,7 +418,7 @@ if (shouldInterceptLinks) {
     }
 
     event.preventDefault();
-    closeNav();
+    closeNav({ suppressAutoOpen: true });
 
     const nextUrl = nextPath;
     const currentUrl = `${window.location.pathname}${window.location.hash}`;
