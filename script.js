@@ -32,8 +32,9 @@ const pageViews = {
           <p class="eyebrow">Team</p>
           <h2>Joshua Carter</h2>
           <p class="role">Owner, Cartertek LLC<br>Software Engineering Consultant</p>
-          <p>Joshua Carter is the owner of Cartertek LLC and a Software Engineering Consultant with 14+ years in software engineering across solo consulting, product engineering, and technical leadership. He has built web apps, APIs, internal tools, and cloud-backed systems for startups, consultancies, media technology, operations platforms, and early-stage products.</p>
-          <p>His work spans React apps, NestJS APIs, AWS services, data workflows, AI/video inferencing support, project rescue, integrations, and practical AI adoption. At Cartertek, he brings that experience to clients who need clear technical judgment and maintainable software.</p>
+          <p>I have spent 14+ years building software in environments where the path is not always obvious: early-stage products, small teams, technical consultancies, legacy systems, fast-moving prototypes, and projects that need both engineering judgment and hands-on execution.</p>
+          <p>My work has ranged from launching new products from the ground up to rebuilding core APIs, improving fragile architectures, supporting high-traffic media workflows, and helping teams turn complicated technical requirements into usable systems.</p>
+          <p>I work close to the problem: understanding what the software needs to accomplish, finding the practical technical path, and building systems that can keep moving after the first version ships.</p>
           <div class="profile-socials" aria-label="Joshua Carter social links">
             <a href="https://github.com/joshuacwebdeveloper">GitHub</a>
             <a href="https://linkedin.com/in/joshuacwebdeveloper">LinkedIn</a>
