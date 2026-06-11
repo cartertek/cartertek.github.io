@@ -5,10 +5,10 @@ const pageViews = {
     description: "Cartertek LLC builds websites, apps, tools, integrations, and practical AI capabilities. Turn your idea, prototype, or struggling project into working software.",
     canonical: "https://cartertek.ai/",
     secondaryNav: [
-      ["Services", "/#services"],
-      ["Project Recovery", "/#recovery"],
-      ["AI Consulting", "/#ai"],
-      ["Process", "/#process"],
+      ["Services", "/home/services"],
+      ["Project Recovery", "/home/recovery"],
+      ["AI Consulting", "/home/ai"],
+      ["Process", "/home/process"],
     ],
     main: null,
   },
@@ -27,14 +27,17 @@ const pageViews = {
     </section>
     <section id="team" class="team section">
       <div class="shell profile-grid reveal">
-        <div class="profile-mark"><img src="/logo-full-square.png" alt="Cartertek LLC" width="1024" height="1024"></div>
+        <div class="profile-mark"><img src="/7_3_1_20241110_105124-cropped-filter.jpg" alt="Joshua Carter" width="1024" height="1024"></div>
         <article>
           <p class="eyebrow">Team</p>
           <h2>Joshua Carter</h2>
           <p class="role">Owner, Cartertek LLC<br>Software Engineering Consultant</p>
-          <p>Joshua Carter is the owner of Cartertek LLC and a Software Engineering Consultant. He helps individuals, SMBs, startups, agencies, and enterprise teams clarify what they need and build software that supports real work.</p>
-          <p>His consulting work focuses on building and rescuing software projects, connecting systems and workflows, modernizing technical bottlenecks, and adding practical AI capabilities where they create clear value.</p>
-          <a class="button" href="/quote">Start a conversation <span aria-hidden="true">↗</span></a>
+          <p>Joshua Carter is the owner of Cartertek LLC and a Software Engineering Consultant with 14+ years in software engineering across solo consulting, product engineering, and technical leadership. He has built web apps, APIs, internal tools, and cloud-backed systems for startups, consultancies, media technology, operations platforms, and early-stage products.</p>
+          <p>His work spans React apps, NestJS APIs, AWS services, data workflows, AI/video inferencing support, project rescue, integrations, and practical AI adoption. At Cartertek, he brings that experience to clients who need clear technical judgment and maintainable software.</p>
+          <div class="profile-socials" aria-label="Joshua Carter social links">
+            <a href="https://github.com/joshuacwebdeveloper">GitHub</a>
+            <a href="https://linkedin.com/in/joshuacwebdeveloper">LinkedIn</a>
+          </div>
         </article>
       </div>
     </section>`,
@@ -94,8 +97,31 @@ const shouldInterceptLinks = initialDocumentPage === "home";
 const homeMainHtml = document.getElementById("main")?.innerHTML || "";
 pageViews["/"].main = homeMainHtml;
 
-const getNormalizedPath = (pathname) => {
+const homeSectionRoutes = {
+  "/home/services": "services",
+  "/home/recovery": "recovery",
+  "/home/ai": "ai",
+  "/home/process": "process",
+};
+
+const legacySectionHashRoutes = {
+  "#services": "/home/services",
+  "#recovery": "/home/recovery",
+  "#ai": "/home/ai",
+  "#process": "/home/process",
+};
+
+Object.entries(homeSectionRoutes).forEach(([path, sectionId]) => {
+  pageViews[path] = {
+    ...pageViews["/"],
+    canonical: `https://cartertek.ai${path}`,
+    sectionId,
+  };
+});
+
+const getNormalizedPath = (pathname, hash = "") => {
   const path = pathname.replace(/\/+$/, "") || "/";
+  if ((path === "/" || path === "/index.html") && legacySectionHashRoutes[hash]) return legacySectionHashRoutes[hash];
   if (path === "/index.html") return "/";
   if (path === "/about.html") return "/about/team";
   if (path === "/case-studies.html") return "/case-studies/experimental-tech";
@@ -104,7 +130,7 @@ const getNormalizedPath = (pathname) => {
 };
 
 const getRoute = () => {
-  return getNormalizedPath(window.location.pathname);
+  return getNormalizedPath(window.location.pathname, window.location.hash);
 };
 
 const setMeta = (selector, attr, value) => {
@@ -128,6 +154,11 @@ const closeDropdowns = (except) => {
       item.querySelector(".dropdown-toggle")?.setAttribute("aria-expanded", "false");
     }
   });
+};
+
+const closeDropdown = (item) => {
+  item.classList.remove("dropdown-open");
+  item.querySelector(".dropdown-toggle")?.setAttribute("aria-expanded", "false");
 };
 
 const closeNav = () => {
@@ -156,7 +187,11 @@ const updateCurrentNav = (route) => {
   document.querySelectorAll("[aria-current]").forEach((element) => element.removeAttribute("aria-current"));
 
   const currentSelectors = {
-    "/": ['a[href="/#services"]'],
+    "/": ['.site-nav a[href="/"]'],
+    "/home/services": ['.site-nav a[href="/"]', 'a[href="/home/services"]'],
+    "/home/recovery": ['.site-nav a[href="/"]', 'a[href="/home/recovery"]'],
+    "/home/ai": ['.site-nav a[href="/"]', 'a[href="/home/ai"]'],
+    "/home/process": ['.site-nav a[href="/"]', 'a[href="/home/process"]'],
     "/about/team": ['a[href="/about/team"]'],
     "/case-studies/experimental-tech": ['a[href="/case-studies/experimental-tech"]'],
     "/quote": ['a[href="/quote"]'],
@@ -173,13 +208,7 @@ const initHeader = () => {
   const siteHeader = document.querySelector(".site-header");
 
   document.querySelectorAll(".has-dropdown").forEach((item) => {
-    const firstDropdownLink = item.querySelector(".dropdown a[href]");
-    const topLevelLink = item.querySelector(":scope > a.dropdown-link");
     const toggle = item.querySelector(".dropdown-toggle");
-
-    if (firstDropdownLink && topLevelLink) {
-      topLevelLink.href = firstDropdownLink.href;
-    }
 
     toggle?.addEventListener("click", () => {
       const willOpen = !item.classList.contains("dropdown-open");
@@ -188,12 +217,17 @@ const initHeader = () => {
       toggle.setAttribute("aria-expanded", String(willOpen));
     });
 
+    item.addEventListener("mouseleave", () => closeDropdown(item));
+
     item.addEventListener("focusout", (event) => {
       if (!item.contains(event.relatedTarget)) {
-        item.classList.remove("dropdown-open");
-        toggle?.setAttribute("aria-expanded", "false");
+        closeDropdown(item);
       }
     });
+  });
+
+  document.querySelectorAll(".site-nav a[href], .secondary-nav a[href]").forEach((link) => {
+    link.addEventListener("click", closeNav);
   });
 
   navToggle?.addEventListener("click", () => {
@@ -269,9 +303,18 @@ const initKoalendar = () => {
   document.head.append(script);
 };
 
-const scrollToRouteTarget = (hash, shouldResetScroll) => {
-  if (hash) {
-    requestAnimationFrame(() => document.querySelector(hash)?.scrollIntoView());
+const scrollToRouteTarget = (sectionId, hash, shouldResetScroll) => {
+  const targetSelector = sectionId ? `#${sectionId}` : hash;
+  if (targetSelector) {
+    requestAnimationFrame(() => {
+      const target = document.querySelector(targetSelector);
+      if (!target) return;
+      target.scrollIntoView();
+      if (sectionId) {
+        target.setAttribute("tabindex", "-1");
+        target.focus({ preventScroll: true });
+      }
+    });
   } else if (shouldResetScroll) {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }
@@ -284,7 +327,7 @@ const renderRoute = ({ shouldResetScroll = true } = {}) => {
 
   if (!main) return;
 
-  const normalizedUrl = `${route}${window.location.hash}`;
+  const normalizedUrl = route;
   const currentUrl = `${window.location.pathname}${window.location.hash}`;
   if (normalizedUrl !== currentUrl) {
     history.replaceState({}, "", normalizedUrl);
@@ -298,17 +341,19 @@ const renderRoute = ({ shouldResetScroll = true } = {}) => {
   updateCurrentNav(route);
   initReveal();
   initKoalendar();
-  scrollToRouteTarget(window.location.hash, shouldResetScroll);
+  scrollToRouteTarget(view.sectionId, window.location.hash, shouldResetScroll);
 };
 
 if (shouldInterceptLinks) {
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a[href]");
     if (!link) return;
+    if (link.classList.contains("skip-link")) return;
 
     const url = new URL(link.href, window.location.href);
     const isSameOrigin = url.origin === window.location.origin;
-    const isRoutable = isSameOrigin && (pageViews[url.pathname.replace(/\/+$/, "") || "/"] || ["/index.html", "/about.html", "/case-studies.html", "/quote.html"].includes(url.pathname));
+    const nextPath = getNormalizedPath(url.pathname, url.hash);
+    const isRoutable = isSameOrigin && pageViews[nextPath];
 
     if (!isRoutable || link.target || link.hasAttribute("download") || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
       return;
@@ -317,18 +362,17 @@ if (shouldInterceptLinks) {
     event.preventDefault();
     closeNav();
 
-    const nextPath = getNormalizedPath(url.pathname);
-    const nextUrl = `${nextPath}${url.hash}`;
+    const nextUrl = nextPath;
     const currentUrl = `${window.location.pathname}${window.location.hash}`;
 
     if (nextUrl !== currentUrl) {
       history.pushState({}, "", nextUrl);
     }
 
-    renderRoute({ shouldResetScroll: !url.hash });
+    renderRoute({ shouldResetScroll: !pageViews[nextPath]?.sectionId && !url.hash });
   });
 
-  window.addEventListener("popstate", () => renderRoute({ shouldResetScroll: !window.location.hash }));
+  window.addEventListener("popstate", () => renderRoute({ shouldResetScroll: !pageViews[getRoute()]?.sectionId && !window.location.hash }));
 }
 
 initHeader();
